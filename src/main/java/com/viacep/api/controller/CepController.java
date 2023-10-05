@@ -28,7 +28,7 @@ public class CepController {
         if (cepId.isEmpty()) {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Cep> response = restTemplate.getForEntity(String.format("https://viacep.com.br/ws/%s/json", cep), Cep.class);
-            return ResponseEntity.status(HttpStatus.OK).body(service.save(response.getBody()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(service.save(response.getBody()));
 
         }
 
