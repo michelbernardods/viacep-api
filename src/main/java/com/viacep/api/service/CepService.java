@@ -5,6 +5,7 @@ import com.viacep.api.repository.CepRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,4 +26,7 @@ public class CepService {
         return repository.save(cepModel);
     }
 
+    public List<Cep> findAllCep() {
+        return repository.findAll();
+    }
 }

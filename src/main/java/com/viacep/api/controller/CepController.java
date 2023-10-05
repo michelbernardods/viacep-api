@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -46,5 +47,17 @@ public class CepController {
 
         logger.info("Get Cep in database: {}", cep);
         return ResponseEntity.status(HttpStatus.OK).body(cepModel.get());
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Object> deleteAllCep() {
+        List<Cep> cep = service.findAllCep();
+
+        if (cep.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Info CEP is not exist in database");
+        }
+
+        service.deleteAll();
+        return ResponseEntity.status(HttpStatus.OK).body("All cep deleted with success - Total: " + cep.size());
     }
 }
