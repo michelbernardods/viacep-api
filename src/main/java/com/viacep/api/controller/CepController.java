@@ -32,14 +32,12 @@ public class CepController {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Cep> response = restTemplate.getForEntity(String.format("https://viacep.com.br/ws/%s/json", cep), Cep.class);
 
-            logger.info("Cep Model: {}", cepModel.get());
             logger.info("Consulting cep in API: {}", cep);
             logger.info("New Cep saved in database: {}", cep);
             return ResponseEntity.status(HttpStatus.CREATED).body(service.save(response.getBody()));
 
         }
 
-        logger.info("Cep Model: {}", cepModel.get());
         logger.info("Get Cep in database: {}", cep);
         return ResponseEntity.status(HttpStatus.OK).body(cepModel.get());
     }
