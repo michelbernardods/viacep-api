@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -31,6 +32,11 @@ public class CepController {
         if (cepModel.isEmpty()) {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Cep> response = restTemplate.getForEntity(String.format("https://viacep.com.br/ws/%s/json", cep), Cep.class);
+
+            if (Objects.requireNonNull(response.getBody()).getCep() == null) {
+                logger.info("CEP is not exist: {}", cep);
+                return ResponseEntity.status(HttpStatus.OK).body("CEP is not exist");
+            }
 
             logger.info("Consulting cep in API: {}", cep);
             logger.info("New Cep saved in database: {}", cep);
