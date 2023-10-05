@@ -5,11 +5,10 @@ import com.viacep.api.service.CepService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("consult-cep")
@@ -24,9 +23,15 @@ public class CepController {
 
     @GetMapping("{cep}")
     public ResponseEntity<Object> consultCep(@PathVariable("cep") String cep) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Cep> response = restTemplate.getForEntity(String.format("https://viacep.com.br/ws/%s/json", cep), Cep.class);
+        Optional<Cep> cepId = service.findCep(cep);
 
-        return ResponseEntity.status(HttpStatus.OK).body(service.save(response.getBody()));
+        if (cepId.isEmpty()) {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<Cep> response = restTemplate.getForEntity(String.format("https://viacep.com.br/ws/%s/json", cep), Cep.class);
+            return ResponseEntity.status(HttpStatus.OK).body(service.save(response.getBody()));
+
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(cepId.get());
     }
 }
