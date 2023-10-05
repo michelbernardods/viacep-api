@@ -49,6 +49,19 @@ public class CepController {
         return ResponseEntity.status(HttpStatus.OK).body(cepModel.get());
     }
 
+    @GetMapping
+    public ResponseEntity<Object> consultAllCepDataBase() {
+        List<Cep> cep = service.findAllCep();
+
+        if (cep.isEmpty()) {
+            logger.info("Database with CEPs is empty");
+            return ResponseEntity.status(HttpStatus.OK).body("Database with CEPs is empty");
+        }
+
+        logger.info("CEPs found. Total: {}", cep.size());
+        return ResponseEntity.status(HttpStatus.OK).body(cep);
+    }
+
     @DeleteMapping
     public ResponseEntity<Object> deleteAllCep() {
         List<Cep> cep = service.findAllCep();
@@ -58,6 +71,6 @@ public class CepController {
         }
 
         service.deleteAll();
-        return ResponseEntity.status(HttpStatus.OK).body("All cep deleted with success - Total: " + cep.size());
+        return ResponseEntity.status(HttpStatus.OK).body("All CEP deleted with success - Total: " + cep.size());
     }
 }
