@@ -14,9 +14,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.viacep.api.constant.CepConstant.*;
+
 @RestController
-@RequestMapping("consult-cep")
+@RequestMapping("v1/consult-cep")
 public class CepController {
+
+    public static String URL = "https://viacep.com.br/ws/%s/json";
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -32,20 +36,20 @@ public class CepController {
 
         if (cepModel.isEmpty()) {
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<Cep> response = restTemplate.getForEntity(String.format("https://viacep.com.br/ws/%s/json", cep), Cep.class);
+            ResponseEntity<Cep> response = restTemplate.getForEntity(String.format(URL, cep), Cep.class);
 
             if (Objects.requireNonNull(response.getBody()).getCep() == null) {
-                logger.info("CEP is not exist: {}", cep);
-                return ResponseEntity.status(HttpStatus.OK).body("CEP is not exist");
+                logger.info(CEP_NOT_EXIST + cep);
+                return ResponseEntity.status(HttpStatus.OK).body(CEP_NOT_EXIST);
             }
 
-            logger.info("Consulting cep in API: {}", cep);
-            logger.info("New Cep saved in database: {}", cep);
+            logger.info(CEP_SEARCH + cep);
+            logger.info(CEP_SAVED + cep);
             return ResponseEntity.status(HttpStatus.CREATED).body(service.save(response.getBody()));
 
         }
 
-        logger.info("Get Cep in database: {}", cep);
+        logger.info(CEP_DATABASE + cep);
         return ResponseEntity.status(HttpStatus.OK).body(cepModel.get());
     }
 
@@ -54,11 +58,11 @@ public class CepController {
         List<Cep> cep = service.findAllCep();
 
         if (cep.isEmpty()) {
-            logger.info("Database with CEPs is empty");
-            return ResponseEntity.status(HttpStatus.OK).body("Database with CEPs is empty");
+            logger.info(DATABASE_EMPTY);
+            return ResponseEntity.status(HttpStatus.OK).body(DATABASE_EMPTY);
         }
 
-        logger.info("CEPs found. Total: {}", cep.size());
+        logger.info(CEP_TOTAL + cep.size());
         return ResponseEntity.status(HttpStatus.OK).body(cep);
     }
 
@@ -67,10 +71,10 @@ public class CepController {
         List<Cep> cep = service.findAllCep();
 
         if (cep.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Info CEP is not exist in database");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CEP_NOT_EXIST);
         }
 
         service.deleteAll();
-        return ResponseEntity.status(HttpStatus.OK).body("All CEP deleted with success - Total: " + cep.size());
+        return ResponseEntity.status(HttpStatus.OK).body(CEP_TOTAL_DELETED + cep.size());
     }
 }
