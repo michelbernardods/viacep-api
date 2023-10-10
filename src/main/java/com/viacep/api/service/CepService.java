@@ -37,6 +37,11 @@ public class CepService {
         repository.deleteById(id);
     }
 
+    public void deleteCepByCep(String cep) {
+        Cep response = findCepDB(cep).get();
+        repository.deleteById(response.getUserId());
+    }
+
     public Object save(Cep cepModel) {
         return repository.save(cepModel);
     }

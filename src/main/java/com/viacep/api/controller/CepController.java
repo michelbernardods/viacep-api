@@ -76,7 +76,7 @@ public class CepController {
         return ResponseEntity.status(HttpStatus.OK).body(CEP_TOTAL_DELETED + cep.size());
     }
 
-@DeleteMapping("{id}")
+@DeleteMapping("/id/{id}")
     public ResponseEntity<Object> deleteUuid(@PathVariable("id") UUID id) {
         Optional<Cep> cep = service.findById(id);
 
@@ -87,6 +87,14 @@ public class CepController {
 
         service.deleteCepByUuid(id);
         logger.info(CEP_DELETED);
+        return ResponseEntity.status(HttpStatus.OK).body(CEP_DELETED);
+    }
+
+    @DeleteMapping("/cep/{cep}")
+    public ResponseEntity<Object> deleteCep(@PathVariable("cep") String cep) {
+        System.out.println(cep);
+
+        service.deleteCepByCep(cep);
         return ResponseEntity.status(HttpStatus.OK).body(CEP_DELETED);
     }
 }
