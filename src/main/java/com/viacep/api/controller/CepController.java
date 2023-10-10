@@ -66,10 +66,12 @@ public class CepController {
         List<Cep> cep = service.findAllCep();
 
         if (cep.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CEP_NOT_EXIST);
+            logger.info(DATABASE_EMPTY);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(DATABASE_EMPTY);
         }
 
         service.deleteAll();
+        logger.info(CEP_TOTAL_DELETED);
         return ResponseEntity.status(HttpStatus.OK).body(CEP_TOTAL_DELETED + cep.size());
     }
 }
