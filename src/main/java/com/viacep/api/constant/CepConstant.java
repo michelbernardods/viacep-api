@@ -8,6 +8,5 @@ public class CepConstant {
     public static final String DATABASE_EMPTY = "Database with CEPs is empty";
     public static final String CEP_TOTAL = "CEPs found. Total ";
     public static final String CEP_TOTAL_DELETED = "All CEP deleted with success - Total:";
-
-
+    public static final String CEP_DELETED = "CEP deleted with success";
 }
