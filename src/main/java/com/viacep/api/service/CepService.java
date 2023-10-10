@@ -1,5 +1,6 @@
 package com.viacep.api.service;
 
+import com.viacep.api.api.Api;
 import com.viacep.api.model.Cep;
 import com.viacep.api.repository.CepRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,14 @@ import java.util.Optional;
 public class CepService {
 
     @Autowired
+    public Api api;
+    @Autowired
     private CepRepository repository;
 
-    public Optional<Cep> findCep(String cep) {
+    public Cep findCepApi(String cep) {
+        return api.getCep(cep);
+    }
+    public Optional<Cep> findCepDB(String cep) {
         return repository.findByCep(cep);
     }
 

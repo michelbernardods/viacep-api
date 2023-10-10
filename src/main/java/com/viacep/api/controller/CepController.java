@@ -1,5 +1,6 @@
 package com.viacep.api.controller;
 
+import com.viacep.api.api.Api;
 import com.viacep.api.model.Cep;
 import com.viacep.api.service.CepService;
 import org.slf4j.Logger;
@@ -8,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.viacep.api.constant.CepConstant.*;
@@ -19,8 +18,6 @@ import static com.viacep.api.constant.CepConstant.*;
 @RestController
 @RequestMapping("v1/consult-cep")
 public class CepController {
-
-    public static String URL = "https://viacep.com.br/ws/%s/json";
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -32,20 +29,18 @@ public class CepController {
 
     @GetMapping("{cep}")
     public ResponseEntity<Object> consultCep(@PathVariable("cep") String cep) {
-        Optional<Cep> cepModel = service.findCep(cep);
+        Optional<Cep> cepModel = service.findCepDB(cep);
 
         if (cepModel.isEmpty()) {
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<Cep> response = restTemplate.getForEntity(String.format(URL, cep), Cep.class);
-
-            if (Objects.requireNonNull(response.getBody()).getCep() == null) {
+            Cep responseApi = service.findCepApi(cep);
+            if (responseApi.getCep() == null) {
                 logger.info(CEP_NOT_EXIST + cep);
                 return ResponseEntity.status(HttpStatus.OK).body(CEP_NOT_EXIST);
             }
 
             logger.info(CEP_SEARCH + cep);
             logger.info(CEP_SAVED + cep);
-            return ResponseEntity.status(HttpStatus.CREATED).body(service.save(response.getBody()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(service.save(responseApi));
 
         }
 
