@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.viacep.api.constant.CepConstant.*;
 
@@ -73,5 +74,19 @@ public class CepController {
         service.deleteAll();
         logger.info(CEP_TOTAL_DELETED);
         return ResponseEntity.status(HttpStatus.OK).body(CEP_TOTAL_DELETED + cep.size());
+    }
+
+@DeleteMapping("{id}")
+    public ResponseEntity<Object> deleteUuid(@PathVariable("id") UUID id) {
+        Optional<Cep> cep = service.findById(id);
+
+        if (cep.isEmpty()) {
+            logger.info(CEP_NOT_EXIST);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CEP_NOT_EXIST);
+        }
+
+        service.deleteCepByUuid(id);
+        logger.info(CEP_DELETED);
+        return ResponseEntity.status(HttpStatus.OK).body(CEP_DELETED);
     }
 }

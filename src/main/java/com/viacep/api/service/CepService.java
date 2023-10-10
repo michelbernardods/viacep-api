@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CepService {
@@ -24,8 +25,16 @@ public class CepService {
         return repository.findByCep(cep);
     }
 
+    public Optional<Cep> findById(UUID id) {
+        return repository.findById(id);
+    }
+
+
     public void deleteAll() {
         repository.deleteAll();
+    }
+    public void deleteCepByUuid(UUID id) {
+        repository.deleteById(id);
     }
 
     public Object save(Cep cepModel) {
