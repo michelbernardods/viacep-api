@@ -4,16 +4,24 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
+import org.springframework.data.annotation.AccessType;
+import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+//@RedisHash(value = "ConsentOTP", timeToLive = 300)
+//@AccessType(AccessType.Type.PROPERTY)
+
+//@Data
 @Entity
-public class Cep {
+public class Cep implements Serializable {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private UUID userId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
     private String cep;
     private String logradouro;
     private String complemento;
@@ -25,12 +33,12 @@ public class Cep {
     private String ddd;
     private String siafi;
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getId() {
+        return id;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getCep() {
@@ -119,18 +127,18 @@ public class Cep {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cep cep1 = (Cep) o;
-        return Objects.equals(userId, cep1.userId) && Objects.equals(cep, cep1.cep) && Objects.equals(logradouro, cep1.logradouro) && Objects.equals(complemento, cep1.complemento) && Objects.equals(bairro, cep1.bairro) && Objects.equals(localidade, cep1.localidade) && Objects.equals(uf, cep1.uf) && Objects.equals(ibge, cep1.ibge) && Objects.equals(gia, cep1.gia) && Objects.equals(ddd, cep1.ddd) && Objects.equals(siafi, cep1.siafi);
+        return Objects.equals(id, cep1.id) && Objects.equals(cep, cep1.cep) && Objects.equals(logradouro, cep1.logradouro) && Objects.equals(complemento, cep1.complemento) && Objects.equals(bairro, cep1.bairro) && Objects.equals(localidade, cep1.localidade) && Objects.equals(uf, cep1.uf) && Objects.equals(ibge, cep1.ibge) && Objects.equals(gia, cep1.gia) && Objects.equals(ddd, cep1.ddd) && Objects.equals(siafi, cep1.siafi);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, cep, logradouro, complemento, bairro, localidade, uf, ibge, gia, ddd, siafi);
+        return Objects.hash(id, cep, logradouro, complemento, bairro, localidade, uf, ibge, gia, ddd, siafi);
     }
 
     @Override
     public String toString() {
         return "Cep{" +
-                "userId=" + userId +
+                "id=" + id +
                 ", cep='" + cep + '\'' +
                 ", logradouro='" + logradouro + '\'' +
                 ", complemento='" + complemento + '\'' +

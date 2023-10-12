@@ -69,7 +69,7 @@ public class CepService {
             throw new Exception(CEP_NOT_EXIST);
         }
 
-        repository.deleteById(cepDB.get().getUserId());
+        repository.deleteById(cepDB.get().getId());
     }
 
     public Object save(Cep cepModel) {
